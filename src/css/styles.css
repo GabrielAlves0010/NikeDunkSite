@@ -1,0 +1,371 @@
+/* Typography imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+/* System Variables & Base Settings */
+:root {
+    --grid-color: rgba(15, 23, 42, 0.03); 
+}
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: #ffffff; 
+    color: #0f172a;
+    overflow-x: hidden;
+    /* Hide default scrollbar for cinematic feel */
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+}
+body::-webkit-scrollbar { display: none; }
+
+h1, h2, h3, h4, h5, h6 { 
+    font-family: 'Playfair Display', serif; 
+}
+
+/* Ambient and Structural Elements */
+.grid-bg-overlay {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                      linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+    background-size: 8rem 8rem;
+    mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+
+/* Hollow Typography */
+.hollow-text {
+    color: transparent;
+    -webkit-text-stroke: 1.5px #0f172a;
+}
+.hollow-text.light {
+    -webkit-text-stroke: 1.5px #ffffff;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s ease;
+}
+
+/* Interactive Buttons */
+.interactive-btn {
+    position: relative; overflow: hidden;
+}
+.interactive-btn::after {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 60%);
+    opacity: 0; transform: scale(0.5); transition: opacity 0.3s, transform 0.5s ease-out;
+    pointer-events: none;
+}
+.interactive-btn:hover::after { opacity: 0.3; transform: scale(1); }
+
+/* Canvas Sequence specific */
+#sequence-canvas {
+    pointer-events: none; /* Block context menu and interaction */
+    will-change: transform;
+}
+
+/* Lenis Smooth Scrolling mandatory CSS */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Utility Animations */
+@keyframes beam-v { 0% { top: -100%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+/* Toast "Mais informacoes em breve" */
+.toast-soon{
+    position:fixed; bottom:2rem; left:50%;
+    transform:translateX(-50%) translateY(20px);
+    opacity:0; pointer-events:none;
+    z-index:100;
+    padding:1rem 1.75rem; border-radius:999px;
+    background:rgba(15,23,42,0.95);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(45,212,191,0.4);
+    color:#fff;
+    font-family:'Space Mono', monospace;
+    font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
+    box-shadow:0 20px 60px rgba(15,23,42,0.45), 0 0 40px rgba(20,184,166,0.2);
+    transition:opacity .45s cubic-bezier(.2,.8,.2,1),
+               transform .45s cubic-bezier(.2,.8,.2,1);
+    display:inline-flex; align-items:center; gap:.75rem;
+    white-space:nowrap;
+}
+.toast-soon.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+.toast-soon .dot{
+    width:.5rem; height:.5rem; border-radius:50%;
+    background:#2dd4bf;
+    box-shadow:0 0 10px #2dd4bf;
+    animation:toastPulse 1.5s ease-in-out infinite;
+}
+@keyframes toastPulse{
+    0%,100% { opacity:1; transform:scale(1); }
+    50%     { opacity:.5; transform:scale(1.4); }
+}
+@keyframes beam-h { 0% { transform:translateX(-100%) skewX(-12deg); } 100% { transform:translateX(200%) skewX(-12deg); } }
+
+/* Mapa europeu (Dobra 4 · Bento box grande) — rotas animadas */
+@keyframes routeDraw {
+    0%   { stroke-dashoffset:var(--dash, 220); opacity:0; }
+    10%  { opacity:1; }
+    60%  { stroke-dashoffset:0; opacity:1; }
+    100% { stroke-dashoffset:0; opacity:.85; }
+}
+.route-line { animation: routeDraw 5s var(--dly, 0s) cubic-bezier(.2,.8,.2,1) infinite; }
+
+@keyframes nodePulse {
+    0%,100% { transform:scale(1); opacity:.45; }
+    50%     { transform:scale(1.35); opacity:1; }
+}
+.city-node .ring-outer { transform-origin:center; transform-box:fill-box; animation:nodePulse 3s ease-in-out infinite; }
+.city-node .ring-mid   { transform-origin:center; transform-box:fill-box; animation:nodePulse 3s ease-in-out infinite 1.2s; }
+.city-node .node-core  { transform-origin:center; transform-box:fill-box; animation:nodePulse 2s ease-in-out infinite; }
+
+@keyframes scanSweep {
+    0%   { transform:translateY(0); opacity:0; }
+    15%  { opacity:.6; }
+    85%  { opacity:.6; }
+    100% { transform:translateY(700px); opacity:0; }
+}
+.scan-line { animation:scanSweep 8s linear infinite; }
+
+@keyframes outlineDash { to { stroke-dashoffset:-60; } }
+.route-outline { animation:outlineDash 20s linear infinite; }
+
+/* ==========================================================
+   CARTELA DOS MESTRES — cards editoriais de materiais
+   ========================================================== */
+.material-card{
+    position:relative;
+    border-radius:2rem;
+    transform-style:preserve-3d;
+    perspective:1200px;
+}
+.material-card .mc-shell{
+    position:relative;
+    border-radius:2rem;
+    overflow:hidden;
+    background:linear-gradient(160deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.55) 60%, rgba(248,250,252,0.6) 100%);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.9);
+    box-shadow:
+        0 30px 60px -20px rgba(15,23,42,0.18),
+        0 15px 30px -15px rgba(15,23,42,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.85);
+    transition:transform .7s cubic-bezier(.2,.8,.2,1),
+               box-shadow .7s cubic-bezier(.2,.8,.2,1);
+}
+.material-card.group:hover .mc-shell{
+    transform:translateY(-8px);
+    box-shadow:
+        0 50px 100px -25px rgba(15,23,42,0.3),
+        0 25px 50px -20px rgba(20,184,166,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+}
+.material-card .mc-shell.mc-dark{
+    background:linear-gradient(160deg, #0f172a 0%, #1e293b 55%, #0f172a 100%);
+    border-color:rgba(71,85,105,0.4);
+    box-shadow:
+        0 30px 60px -20px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.material-card .mc-shell.mc-dark .mc-title,
+.material-card .mc-shell.mc-dark .mc-desc,
+.material-card .mc-shell.mc-dark .mc-stats b{ color:#fff; }
+.material-card .mc-shell.mc-dark .mc-desc{ color:rgba(203,213,225,0.8); }
+.material-card .mc-shell.mc-dark .mc-stats span{ color:rgba(148,163,184,0.8); }
+.material-card .mc-shell.mc-dark .mc-meta{
+    border-color:rgba(71,85,105,0.4);
+}
+.material-card .mc-shell.mc-dark .mc-meta .mc-origin,
+.material-card .mc-shell.mc-dark .mc-meta .mc-cert{ color:rgba(148,163,184,0.9); }
+
+/* Glow radial atras */
+.material-card .mc-glow{
+    position:absolute; inset:-20%;
+    background:radial-gradient(circle at 50% 20%, var(--accent,#14b8a6) 0%, transparent 55%);
+    opacity:.08;
+    filter:blur(40px);
+    pointer-events:none;
+    transition:opacity .7s ease;
+    z-index:0;
+}
+.material-card.group:hover .mc-glow{ opacity:.28; }
+
+/* SWATCH — a "aba" visual no topo */
+.material-card .mc-swatch{
+    position:relative;
+    aspect-ratio:16/10;
+    overflow:hidden;
+    background:linear-gradient(135deg, var(--bg1,#f5f5f5), var(--bg2,#e5e5e5));
+}
+.material-card .mc-swatch::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at 70% 20%, rgba(255,255,255,0.6), transparent 50%);
+    opacity:.9;
+    pointer-events:none;
+}
+.material-card .mc-swatch::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.08) 100%);
+    pointer-events:none;
+}
+/* Texturas especificas */
+.material-card .mc-macro{
+    position:absolute; inset:0;
+    opacity:.7;
+    transform:scale(1.1);
+    transition:transform 1s cubic-bezier(.2,.8,.2,1), opacity .6s ease;
+    pointer-events:none;
+    mix-blend-mode:multiply;
+}
+.material-card.group:hover .mc-macro{
+    transform:scale(1.25);
+    opacity:.9;
+}
+.material-card .mc-shell.mc-dark .mc-macro{ mix-blend-mode:screen; }
+
+/* Shimmer metalico (para metal/prata) */
+.material-card .mc-shimmer{
+    position:absolute; inset:0;
+    background:linear-gradient(115deg,
+        transparent 30%, rgba(255,255,255,0.5) 45%,
+        rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.5) 55%, transparent 70%);
+    background-size:200% 100%;
+    background-position:200% 0;
+    animation:mcShimmer 4.5s linear infinite;
+    pointer-events:none;
+}
+@keyframes mcShimmer{
+    0%  { background-position:200% 0; }
+    100%{ background-position:-200% 0; }
+}
+
+/* Overlay mel (ouro liquido) */
+.material-card .mc-honey{
+    position:absolute; inset:0;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.85), transparent 35%),
+        radial-gradient(ellipse at 70% 80%, rgba(202,138,4,0.35), transparent 50%),
+        linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+    opacity:.8;
+}
+
+/* Overlay fibras Pebax */
+.material-card .mc-fibers{
+    position:absolute; inset:0;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(103,232,249,0.3), transparent 70%),
+        linear-gradient(135deg, #ecfeff 0%, #67e8f9 100%);
+}
+
+/* Textura couro (efeito bege com granulacao) */
+.material-card .mc-texture-leather{
+    position:absolute; inset:0;
+    background:
+        radial-gradient(ellipse at 40% 30%, rgba(255,255,255,0.5), transparent 55%),
+        linear-gradient(135deg, #f5efe0 0%, #cdb788 100%);
+}
+
+/* Waffle (borracha escura) */
+.material-card .mc-waffle{
+    background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+.material-card .mc-swatch.mc-waffle::before{
+    background:radial-gradient(circle at 70% 20%, rgba(255,255,255,0.15), transparent 55%);
+}
+
+/* Numero romano/sigla no canto */
+.material-card .mc-sigil{
+    position:absolute; top:1.25rem; right:1.5rem;
+    font-family:'Playfair Display', serif;
+    font-weight:500;
+    font-size:3.5rem;
+    line-height:1;
+    color:transparent;
+    -webkit-text-stroke:1.2px rgba(15,23,42,0.2);
+    letter-spacing:-0.03em;
+    z-index:3;
+    mix-blend-mode:multiply;
+}
+.material-card .mc-sigil.mc-sigil-light{
+    -webkit-text-stroke:1.2px rgba(255,255,255,0.35);
+    mix-blend-mode:screen;
+}
+
+/* Body (texto) */
+.material-card .mc-body{
+    position:relative; z-index:2;
+    padding:1.75rem 1.75rem 2rem;
+}
+.material-card .mc-meta{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-bottom:.9rem; margin-bottom:1rem;
+    border-bottom:1px solid rgba(15,23,42,0.08);
+    font-family:'Space Mono', monospace;
+    font-size:.6rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+}
+.material-card .mc-origin{ color:var(--accent, #334155); font-weight:700; }
+.material-card .mc-cert{ color:#94a3b8; }
+
+.material-card .mc-title{
+    font-family:'Playfair Display', serif;
+    font-weight:500;
+    font-size:1.8rem;
+    line-height:1.1;
+    color:#0f172a;
+    letter-spacing:-0.01em;
+    margin-bottom:.75rem;
+}
+.material-card .mc-title em{
+    font-style:italic;
+    background-image:linear-gradient(90deg, var(--accent, #14b8a6), #0d9488);
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent;
+}
+.material-card .mc-desc{
+    font-family:'Inter', sans-serif; font-weight:300;
+    font-size:.875rem; line-height:1.65;
+    color:#475569;
+    margin-bottom:1.25rem;
+}
+.material-card .mc-stats{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem;
+    padding-top:1rem;
+    border-top:1px solid rgba(15,23,42,0.08);
+}
+.material-card .mc-stats > div{ display:flex; flex-direction:column; }
+.material-card .mc-stats b{
+    font-family:'Playfair Display', serif; font-weight:500;
+    font-size:1.25rem; color:#0f172a;
+    line-height:1;
+}
+.material-card .mc-stats span{
+    font-family:'Space Mono', monospace;
+    font-size:.55rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:#94a3b8;
+    margin-top:.35rem;
+}
+
+/* Ritual (Dobra 3) — step ativo ganha highlight premium */
+.ritual-step{ transition:transform .6s cubic-bezier(.2,.8,.2,1); }
+.ritual-step > div{ transition:transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .6s ease, border-color .6s ease; }
+.ritual-step.is-active > div{
+    transform:translateY(-8px) scale(1.015);
+    box-shadow:0 30px 60px -15px rgba(20,184,166,.25), 0 10px 30px -5px rgba(15,23,42,.12);
+    border-color:rgba(45,212,191,.5) !important;
+}
+.ritual-step:hover > div{ transform:translateY(-4px); }

@@ -15,18 +15,31 @@ Landing page editorial do **Nike Dunk Low — Performance Series**. Experiencia 
 
 ```
 NikeDunkSite/
-├── index.html              # marcacao principal
+├── index.html              # marcacao principal (markup apenas)
 ├── design_system.html      # documentacao visual (tokens + componentes)
+├── src/
+│   ├── css/
+│   │   └── styles.css      # todos os estilos do projeto
+│   └── js/
+│       └── main.js         # animacoes GSAP, Lenis, canvas scrub, toast
 ├── public/
 │   ├── images/             # renders e fotos do produto
 │   ├── frames/             # 192 frames do video para scrub
 │   └── video/              # .mp4 original
 ├── scripts/
 │   └── extract_frames.py   # regera os frames a partir do .mp4
-├── vercel.json             # rewrites e headers para deploy
+├── vercel.json             # cache headers para assets estaticos
 ├── .gitignore
 └── README.md
 ```
+
+### Divisao de responsabilidades
+
+| Arquivo | Conteudo |
+|---|---|
+| `index.html` | Markup + Tailwind config inline + referencias para `src/css` e `src/js` |
+| `src/css/styles.css` | Reset, tipografia, glass-panel, animacoes customizadas, cartela dos mestres, ritual timeline, toast |
+| `src/js/main.js` | Lenis, GSAP timelines, canvas frame scrub, ScrollTrigger, smooth scroll, handler do toast |
 
 ## Rodar localmente
 
