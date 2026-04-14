@@ -17,14 +17,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. Initial Page Load Animations (GSAP)
     gsap.registerPlugin(ScrollTrigger);
     
+    // fromTo garante estado final explicito (opacity:1), evitando que os elementos
+    // fiquem "presos" em opacity:0 quando tlLoad e o tlSequence disputam a mesma propriedade
     const tlLoad = gsap.timeline();
     tlLoad.to(".top-nav", { opacity: 1, y: 10, duration: 1, ease: "power2.out", delay: 0.2 })
-      .from("#hero-badge", { y: -20, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
-      .from("#hero-title span", { y: 50, opacity: 0, duration: 1.2, stagger: 0.15, ease: "power4.out", clipPath: "inset(100% 0 0 0)" }, "-=0.6")
-      .from("#video-wrapper", { scale: 1.1, filter: "blur(20px)", opacity: 0, duration: 2, ease: "power2.out" }, "-=1.2")
-      .from("#hero-desc", { x: -30, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=1.5")
-      .from("#hero-ctas button", { y: 20, opacity: 0, duration: 0.8, stagger: 0.1, ease: "back.out(1.5)" }, "-=1.2")
-      .from("#float-card-1", { x: 30, opacity: 0, duration: 1, ease: "power2.out" }, "-=1")
+      .fromTo("#hero-badge", { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, "-=0.6")
+      .fromTo("#hero-title span", { y: 50, opacity: 0, clipPath: "inset(100% 0 0 0)" }, { y: 0, opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 1.2, stagger: 0.15, ease: "power4.out" }, "-=0.6")
+      .fromTo("#video-wrapper", { scale: 1.1, filter: "blur(20px)", opacity: 0 }, { scale: 1, filter: "blur(0px)", opacity: 1, duration: 2, ease: "power2.out" }, "-=1.2")
+      .fromTo("#hero-desc", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, "-=1.5")
+      .fromTo("#hero-ctas button", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "back.out(1.5)", clearProps: "opacity,transform" }, "-=1.2")
+      .fromTo("#float-card-1", { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
       .to("#scroll-prompt", { opacity: 1, duration: 1, ease: "power2.out" }, "-=0.2");
 
     gsap.to("#float-card-1", { y: -15, duration: 2.5, yoyo: true, repeat: -1, ease: "sine.inOut" });
